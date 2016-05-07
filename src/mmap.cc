@@ -4,8 +4,13 @@
 #include "nan.h"
 #include "errno.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#include "winmman.h"
+#else
 #include <sys/mman.h>
 #include <unistd.h>
+#endif
 
 namespace node {
 namespace node_mmap {
@@ -27,6 +32,13 @@ static void FreeCallback(char* data, void* hint) {
 static void DontFree(char* data, void* hint) {
 }
 
+#ifdef _WIN32
+static size_t getpagesize() {
+  SYSTEM_INFO sysinfo;
+  GetSystemInfo(&sysinfo);
+  return sysinfo.dwPageSize;
+}
+#endif
 
 NAN_METHOD(Alloc) {
   Nan::HandleScope scope;
