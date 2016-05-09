@@ -8,5 +8,8 @@
     "sources": [
       "src/mmap.cc",
     ],
+    "cflags_cc": [
+      "-std=c++11"
+    ],
   }],
 }
