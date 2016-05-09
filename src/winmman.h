@@ -50,12 +50,12 @@ inline void* mmap(void* addr, size_t length, int prot, int flags, int fd, size_t
         protect = PAGE_READONLY;
 
     size_t end = length + offset;
-    const DWORD dwEndLow = (sizeof(size_t) > sizeof(DWORD)) ? DWORD(end & 0xFFFFFFFFL) : DWORD(end);
-    const DWORD dwEndHigh = (sizeof(size_t) > sizeof(DWORD)) ? DWORD(end & 0xFFFFFFFFL) : DWORD(0);
-    const DWORD dwOffsetLow = (sizeof(size_t) > sizeof(DWORD)) ? DWORD(offset & 0xFFFFFFFFL) : DWORD(offset);
-    const DWORD dwOffsetHigh = (sizeof(size_t) > sizeof(DWORD)) ? DWORD(offset & 0xFFFFFFFFL) : DWORD(0);
+    const DWORD dwEndLow = (sizeof(size_t) > sizeof(DWORD)) ? DWORD(end & 0x0000FFFFL) : DWORD(end);
+    const DWORD dwEndHigh = (sizeof(size_t) > sizeof(DWORD)) ? DWORD(end>>16) : DWORD(0);
+    const DWORD dwOffsetLow = (sizeof(size_t) > sizeof(DWORD)) ? DWORD(offset & 0x0000FFFFL) : DWORD(offset);
+    const DWORD dwOffsetHigh = (sizeof(size_t) > sizeof(DWORD)) ? DWORD(offset>>16) : DWORD(0);
 
-    HANDLE h = (fd == -1) ? HANDLE(_get_osfhandle(fd)) : INVALID_HANDLE_VALUE;
+    HANDLE h = (fd != -1) ? HANDLE(_get_osfhandle(fd)) : INVALID_HANDLE_VALUE;
     HANDLE fm = CreateFileMapping(h, nullptr, protect, dwEndHigh, dwEndLow, nullptr);
     if (fm == nullptr)
         return MAP_FAILED;
