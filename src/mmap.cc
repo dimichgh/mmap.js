@@ -6,7 +6,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#include "winmman.h"
+#include "winmmap.h"
 #else
 #include <sys/mman.h>
 #include <unistd.h>
